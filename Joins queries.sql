@@ -5,7 +5,6 @@ REQUIREMENT - Use a multi-line comment to paste the first 5 or fewer results und
 		     Also include the total records returned.
 */
 USE orderbook_activity_db;
-
 -- #1: Display the dateJoined and username for admin users.
 SELECT dateJoined, uname FROM User
 WHERE uname = 'admin';
@@ -24,8 +23,7 @@ ORDER BY net_order DESC;
 26827.00	pending	QQQ	13	4	2	2023-03-15 19:24:32
 26827.00	pending	QQQ	12	4	2	2023-03-15 19:24:32
 24315.00	pending	NFLX	3	6	2	2023-03-15 19:21:12
-3873.00	        pending	WLY	20	3	1	2023-03-15 19:51:06
-
+3873.00	pending	WLY	20	3	1	2023-03-15 19:51:06
 18 ROWS RETURNED
 */
 
@@ -41,11 +39,8 @@ JOIN `Fill` AS f ON f.orderid = o.orderid;
 5	A	filled	-10	129.89
 7	GS	filled	-10	305.63
 8	AAPL	filled	25	140.76
-
 14 ROWS RETURNED
 */
-
-
 -- #4: Display all partial_fill orders and how many outstanding shares are left.
 -- Also include the username, symbol, and orderid.
 SELECT *
@@ -54,7 +49,6 @@ WHERE status = "partial_fill";
 /*
 1	1	WLY	1	2023-03-15 19:20:35	100	38.73	partial_fill
 11	5	SPY	1	2023-03-15 19:24:21	100	365.73	partial_fill
-
 2 rows returned
 */
 
@@ -79,16 +73,14 @@ INNER JOIN
     `Fill` AS f ON o.orderid = f.orderid
 WHERE
     o.status = 'filled';
-    
-/*
+    /*
 2	WLY	filled	-10	10	38.73	387.30
 4	A	filled	10	-10	129.89	1298.90
 5	A	filled	-10	10	129.89	1298.90
 7	GS	filled	-10	10	305.63	3056.30
 8	AAPL	filled	25	-10	140.76	3519.00
-
 11 ROWS RETURNED
-*/
+    */
     
     
 -- #6: Display the username and user role for users who have not placed an order.
@@ -98,17 +90,13 @@ LEFT JOIN `Order` AS o ON o.userid = u.userid
 JOIN UserRoles AS ur ON u.userid = ur.userid
 JOIN Role AS r ON ur.roleid = r.roleid
 WHERE o.userid IS NULL;
-
 /*
 sam	user
 wiley	admin
 2 ROWS RETURNED
 */
 
-
--- #7: Display orderid, username, role, symbol, price, and number of shares for orders with no fills.
--- #8: Display the symbol, username, role, and number of filled shares where the order symbol is WLY.
--- Include all orders, even if the order has no fills.
+#7: Display orderid, username, role, symbol, price, and number of shares for orders with no fills.
 SELECT o.orderid, u.uname, r.name AS role, o.symbol, o.price, COUNT(o.shares) AS num_of_shares
 FROM `Order` AS o
 JOIN `User` AS u ON o.userid = u.userid
@@ -117,18 +105,17 @@ JOIN `Role` AS r  ON ur.roleid = r.roleid
 LEFT JOIN Fill AS f ON f.orderid = o.orderid
 WHERE NOT o.status = "filled"
 GROUP BY o.orderid, u.uname, r.name; 
-
 /*
 1	admin	admin	WLY	38.73	1
 6	admin	admin	GS	305.63	1
 11	alice	admin	SPY	365.73	1
 19	alice	admin	GOOG	100.82	1
 21	alice	admin	A	129.89	1
-
 14 rows returned
 */
 
--- #8: Display the symbol, username, role, and number of filled shares where the order symbol is WLY.
+
+#8: Display the symbol, username, role, and number of filled shares where the order symbol is WLY.
 -- Include all orders, even if the order has no fills.
 SELECT o.symbol, u.uname, r.name AS role_name, COUNT(o.shares)
 FROM `Order` AS o
@@ -140,6 +127,7 @@ GROUP BY o.orderid, u.uname, r.name;
 /*
 WLY	admin	admin	1
 WLY	james	user	1
-
 2 Rows Returned
 */
+
+
